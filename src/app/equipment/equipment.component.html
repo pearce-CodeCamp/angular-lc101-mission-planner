@@ -3,6 +3,12 @@
     <ol>
         <li *ngFor="let item of equipmentItems">
             <!-- "Add to Cargo Hold" button goes here. -->
+            <!-- if the adding on the mass of the item will make cargoMass exceed
+                the maximumAllowedMass, then we need to disable the button -->
+            <!-- cargoMass, maximumAllowedMass, item.mass -->
+            <button (click)="addItem(item)" [disabled]="shouldBeDisabled(item)">
+                Add to Cargo Hold
+            </button>
             {{item.name}}, {{item.mass}} kg
         </li>
     </ol>
@@ -10,13 +16,21 @@
 
 <hr>
 
-<div class = "displayBox">
+<div class="displayBox">
     <h3>Cargo Hold: {{cargoHold.length}}/{{maxItems}} Spots Filled</h3>
     <ol>
         <li *ngFor="let equipment of cargoHold">{{equipment.name}}</li>
     </ol>
     <p>Mass in Hold: {{cargoMass}} kg</p>
-    <p>Mass Budget Remaining: {{<!-- Calculate mass remaining here. -->}} kg</p>
+    <!-- only style this p tag with the nearMaxMass css class if
+        we are within 200 kg of maximumAllowedMass-->
+    <!-- class attribute directive bound to some conditional...
+        meaning if the conditional is true, then the class is applied
+        and if it's false, the class is not applied to the element-->
+    <p [class.nearMaxMass]="shouldBeStyled()">Mass Budget Remaining:
+        <!-- this calculates how much mass we have left
+        before we reach out limit -->
+        {{maximumAllowedMass - cargoMass}} kg
+    </p>
     <!-- Add the "Empty Hold" button here. -->
 </div>
-
